@@ -1,9 +1,10 @@
 package autenticacion.estrategias;
 
+import java.util.ArrayList;
+
 import autenticacion.EstrategiaAutenticacion;
-import autenticacion.estrategias.verificaciones.Cacheado;
-import autenticacion.estrategias.verificaciones.DatoCrudo;
-import autenticacion.estrategias.verificaciones.FuerzaBruta;
+import autenticacion.FabricaVerificacion;
+import autenticacion.Verificacion;
 
 public class BaseDeDatos implements EstrategiaAutenticacion {
 
@@ -12,21 +13,14 @@ public class BaseDeDatos implements EstrategiaAutenticacion {
 		
 		if(nombre.equalsIgnoreCase("Juan") && contrasenia.equalsIgnoreCase("123")) {
 		
-			FuerzaBruta fuerzaBruta = new FuerzaBruta();
-			Cacheado cacheado = new Cacheado();
-			DatoCrudo datoCrudo = new DatoCrudo();
+			FabricaVerificacion fabricaVerificaciones = new FabricaVerificacion();
+			ArrayList<Verificacion> verificaciones = fabricaVerificaciones.crearVerificacionesDelSistema();
 			
-			if (!fuerzaBruta.verificar(nombre, contrasenia)) {
-				return false;
-			}		
-			
-			if (!datoCrudo.verificar(nombre, contrasenia)) {
-				return false;
-			}
-					
-			if (!cacheado.verificar(nombre, contrasenia)) {
-				return false;
-			}			
+			for (Verificacion verificacion : verificaciones) {
+				if(!verificacion.verificar(nombre, contrasenia)) {
+					return false;
+				}
+			}	
 			
 			System.out.println("¡Autenticado por medio de base de datos exitosamente! ");
 			
